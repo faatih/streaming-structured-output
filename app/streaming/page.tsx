@@ -15,13 +15,14 @@ export default function SyncPage() {
   const [recipe, setRecipe] = useState<z.infer<typeof RecipeSchema>>();
 
   async function handleSubmit() {
-    setPrompt("");
+    if (!prompt.trim()) return;
+
     setIsLoading(true);
     setRecipe(undefined);
 
     const res = await fetch("/streaming/api", {
       method: "POST",
-      body: JSON.stringify({ prompt: "chocolate brownies" }),
+      body: JSON.stringify({ prompt }),
     });
 
     const reader = res.body?.getReader();
@@ -41,6 +42,7 @@ export default function SyncPage() {
     }
 
     setIsLoading(false);
+    setPrompt(""); // Clear the input after submitting
   }
 
   return (
